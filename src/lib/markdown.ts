@@ -12,7 +12,7 @@ export const md = new MarkdownIt({
         if (lang && hljs.getLanguage(lang)) {
             try {
                 codeContent = hljs.highlight(str, { language: lang }).value;
-            } catch (__) {
+            } catch {
                 codeContent = md.utils.escapeHtml(str);
             }
         } else {
@@ -27,7 +27,7 @@ export const md = new MarkdownIt({
 
 // Avoid bold fragmentation when pasting from certain apps
 export function preprocessMarkdown(content: string) {
-    content = content.replace(/^[ ]{0,3}(\*[ ]*\*[ ]*\*[\* ]*)[ \t]*$/gm, '***');
+    content = content.replace(/^[ ]{0,3}([*][ ]*[*][ ]*[*][* ]*)[ \t]*$/gm, '***');
     content = content.replace(/^[ ]{0,3}(-[ ]*-[ ]*-[- ]*)[ \t]*$/gm, '---');
     content = content.replace(/^[ ]{0,3}(_[ ]*_[ ]*_[_ ]*)[ \t]*$/gm, '___');
     content = content.replace(/\*\*[ \t]+\*\*/g, ' ');
@@ -35,8 +35,10 @@ export function preprocessMarkdown(content: string) {
     // markdown-it may fail to open bold when content starts with punctuation/symbol
     // and `**` is attached directly to preceding text (e.g. `至**-5%**。`).
     // Insert a zero-width separator only inside opening `**...` for these cases.
+    // `\u005B` is a literal `[` — written that way because an unescaped `[` inside
+    // the character class would terminate it early.
     content = content.replace(
-        /([^\s])\*\*([+\-＋－%％~～!！?？,，.。:：;；、\\/|@#￥$^&*_=（）()【】\[\]《》〈〉「」『』“”"'`…·][^\n*]*?)\*\*/g,
+        /([^\s])\*\*([+\-＋－%％~～!！?？,，.。:：;；、\\/|@#￥$^&*_=（）()【】\u005B\]《》〈〉「」『』“”"'`…·][^\n*]*?)\*\*/g,
         '$1**\u200B$2**'
     );
     return content;

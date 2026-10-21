@@ -11,3 +11,8 @@ test-results/
 *.swp
 *.swo
 *~
+
+# `tsc -b` emits these next to the source unless an outDir is set.
+# tsconfig.node.json now redirects them, but keep them ignored as a safety net.
+vite.config.js
+vite.config.d.ts

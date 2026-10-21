@@ -35,6 +35,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Run lint
+        run: pnpm lint
+
       - name: Run unit tests
         run: pnpm test
 
@@ -47,7 +50,12 @@ jobs:
       - name: Build
         run: pnpm build
         env:
+          # vite.config.ts derives `base` from these: project Pages sites are
+          # served from /<repo>/, so assets must be built with that prefix.
           GITHUB_PAGES: 'true'
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          # Set BASE_PATH=/ when publishing to a custom domain (site at root).
+          BASE_PATH: ${{ vars.BASE_PATH }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

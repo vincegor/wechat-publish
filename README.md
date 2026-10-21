@@ -56,7 +56,7 @@
 
 ### 多端预览
 
-编辑时实时预览，支持手机 (480px)、平板 (768px)、桌面 (PC) 三种视图切换，所见即所得。
+编辑时实时预览，支持手机 (520px)、平板 (720px)、桌面 (PC) 三种视图切换，所见即所得。
 
 ### 导出
 
@@ -83,7 +83,48 @@ pnpm dev
 ## 构建部署
 
 ```bash
-pnpm build
+pnpm build          # = tsc -b && vite build
+pnpm preview        # 本地预览生产构建
+pnpm lint           # ESLint（flat config）
 ```
 
 构建产物输出到 `dist/` 目录，可部署到 GitHub Pages 或任意静态托管服务。
+
+### GitHub Pages
+
+仓库内置 `.github/workflows/deploy.yml`，推送到 `main` 即自动构建并发布。
+
+**首次使用需要在仓库设置里完成两件事（代码里配置不了）：**
+
+1. **Settings → Pages → Build and deployment → Source** 选择 **"GitHub Actions"**
+2. **Settings → Pages → Custom domain** 填入你的域名（可选）。填了自定义域名就同时把仓库变量 `BASE_PATH` 设为 `/`，站点会从根路径提供服务；不填则使用 `https://<user>.github.io/<repo>/`。
+
+**关于 `base` 路径：** GitHub Pages 的项目站点从子路径提供服务（`https://<user>.github.io/<repo>/`），
+所以构建时必须带上 `/<repo>/` 前缀，否则资源会 404、页面白屏。
+`vite.config.ts` 已经自动处理——Actions 会注入 `GITHUB_PAGES=true` 和 `GITHUB_REPOSITORY=owner/repo`，
+构建出的资源路径即 `/<repo>/assets/...`。本地 `pnpm build` 不带前缀，产出的是根路径版本。
+
+**关于 `public/CNAME`：** 上游仓库原本带有一个指向 `publish.raphael.app` 的 CNAME 文件。
+该域名归上游作者所有，**fork 后必须删除它**，否则 Pages 会尝试用你无权控制的域名去签发证书，
+导致站点无法访问。
+
+### 其他静态托管
+
+`dist/` 是纯静态产物，可以直接丢到 Vercel / Netlify / Cloudflare Pages / nginx / S3：
+
+| 平台 | 构建命令 | 输出目录 |
+|------|----------|----------|
+| Vercel | `pnpm build` | `dist` |
+| Netlify | `pnpm build` | `dist` |
+| Cloudflare Pages | `pnpm build` | `dist` |
+
+自定义域名部署时记得设置 `BASE_PATH=/`（或直接用 `pnpm exec vite build --base=/`）。
+
+### 可选：访问统计
+
+上游默认接入了 Microsoft Clarity，但那个项目 ID 属于上游作者。统计功能现在是**默认关闭**的，
+需要的话在构建时提供自己的 Clarity ID：
+
+```bash
+VITE_CLARITY_ID=你的项目ID pnpm build
+```

@@ -21,7 +21,7 @@ export default function Toolbar({ previewDevice, onDeviceChange, onExportPdf, on
                     data-testid="device-mobile"
                     onClick={() => onDeviceChange('mobile')}
                     className={`p-2 rounded-full transition-all ${previewDevice === 'mobile' ? 'bg-white dark:bg-[#2c2c2e] shadow-sm' : 'text-[#86868b] dark:text-[#a1a1a6] hover:text-[#1d1d1f] dark:hover:text-[#f5f5f7]'}`}
-                    title="手机视图 (480px)"
+                    title="手机视图 (520px)"
                 >
                     <Smartphone size={16} />
                 </button>
@@ -29,7 +29,7 @@ export default function Toolbar({ previewDevice, onDeviceChange, onExportPdf, on
                     data-testid="device-tablet"
                     onClick={() => onDeviceChange('tablet')}
                     className={`p-2 rounded-full transition-all ${previewDevice === 'tablet' ? 'bg-white dark:bg-[#2c2c2e] shadow-sm' : 'text-[#86868b] dark:text-[#a1a1a6] hover:text-[#1d1d1f] dark:hover:text-[#f5f5f7]'}`}
-                    title="平板视图 (768px)"
+                    title="平板视图 (720px)"
                 >
                     <Tablet size={16} />
                 </button>
