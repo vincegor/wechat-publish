@@ -76,6 +76,7 @@ If you add an internal attribute, strip it on both export paths.
 GitHub Pages, `.github/workflows/deploy.yml` publishes to GitHub Pages on push to `main`.
 
 - **`vite.config.ts` computes `base` automatically**: `GITHUB_PAGES=true` + `GITHUB_REPOSITORY=owner/repo` → `base = /<repo>/`. Project Pages are served from a sub-path, so a root-relative `base` produces a blank page (404s on every asset). Override with `BASE_PATH=/` for a custom-domain (root-served) site.
+- **`BASE_PATH` must be checked for emptiness, not just nullish.** An unset GitHub Actions repo variable (`${{ vars.BASE_PATH }}`) expands to an **empty string**, not `undefined` — so `process.env.BASE_PATH ?? fallback` silently yields `base: ''`, which makes Vite emit *relative* asset paths (`./assets/…`). Those load fine at the site root but break on any deep link. `vite.config.ts` uses `process.env.BASE_PATH?.trim() || fallback` for this reason.
 - **`public/CNAME` was removed.** It pointed at `publish.raphael.app`, which the upstream author owns (Cloudflare-fronted). A fork shipping that CNAME makes Pages try to issue a cert for a domain it doesn't control → site breaks.
 - **Microsoft Clarity is opt-in** via `VITE_CLARITY_ID` (`src/lib/analytics.ts`). Upstream hard-coded its own Clarity project id, so every fork reported its visitors to that project.
 - Repo settings that are **not** in code: Pages → Source = "GitHub Actions", and the optional custom domain + a repo variable `BASE_PATH=/` when using one.

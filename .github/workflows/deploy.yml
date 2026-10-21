@@ -54,7 +54,9 @@ jobs:
           # served from /<repo>/, so assets must be built with that prefix.
           GITHUB_PAGES: 'true'
           GITHUB_REPOSITORY: ${{ github.repository }}
-          # Set BASE_PATH=/ when publishing to a custom domain (site at root).
+          # Set the repo variable BASE_PATH=/ when publishing to a custom domain
+          # (site served from the root). NOTE: an unset repo variable expands to
+          # an empty string, which vite.config.ts treats as "not set".
           BASE_PATH: ${{ vars.BASE_PATH }}
 
       - name: Setup Pages
