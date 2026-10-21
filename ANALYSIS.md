@@ -321,9 +321,11 @@ All findings above were reproduced locally, not inferred.
 
 ---
 
-## 8. Fork changes (`VinceChan1982/wechat-publish`)
+## 8. Fork changes (`vincegor/wechat-publish`)
 
-The upstream repo was forked to `VinceChan1982/raphael-publish` on 2026-09-14 and left untouched — Pages was never enabled and Actions never ran. This working copy applies the fork-specific fixes below.
+> **Deployed:** https://vincegor.github.io/wechat-publish/ — CI and the Pages deploy workflow both run green on every push to `main`.
+
+The upstream repo was forked to `VinceChan1982/raphael-publish` on 2026-09-14 and left untouched — Pages was never enabled and Actions never ran. This working copy is published as the standalone repo **`vincegor/wechat-publish`** (the fork's own account had no push access from the available credentials), with the fork-specific fixes below.
 
 ### Deployment blockers (all fixed)
 
@@ -369,3 +371,5 @@ The findings in §4 that affect product behaviour rather than deployment — the
 | Root build | `src="/assets/index-*.js"` ✅ |
 | `pnpm preview` on the sub-path build | `/wechat-publish/` → 200, assets → 200 ✅ |
 | `dist/` contents | `index.html` + `assets/` — **no CNAME** ✅ |
+| **Live site** | https://vincegor.github.io/wechat-publish/ — HTTP 200, assets 200, absolute `/wechat-publish/assets/…` paths ✅ |
+| Live browser check | Renders the default article, theme switch applies (Claude bg `rgb(248,246,240)`), copy-to-WeChat emits `text/html` with a `<section>` root, **zero console errors** ✅ |
